@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trading Bot — Binance Futures Testnet</title>
+  <meta name="description" content="Place Market and Limit orders on Binance USDT-M Futures Testnet via a beautiful web UI." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Background Orbs -->
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <div class="app-wrapper">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo">
+          <span class="logo-icon">⚡</span>
+          <span class="logo-text">TradingBot</span>
+        </div>
+        <div class="badge">Testnet</div>
+      </div>
+      <div class="header-right">
+        <div class="status-indicator" id="statusIndicator">
+          <span class="status-dot"></span>
+          <span class="status-text">Ready</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+
+      <!-- Order Panel -->
+      <section class="panel order-panel" aria-label="Place Order">
+        <div class="panel-header">
+          <h1 class="panel-title">Place Order</h1>
+          <p class="panel-subtitle">USDT-M Futures · Binance Testnet</p>
+        </div>
+
+        <!-- Symbol Tabs -->
+        <div class="symbol-tabs" role="tablist" aria-label="Trading Pair">
+          <button class="symbol-tab active" role="tab" data-symbol="BTCUSDT" id="tab-btcusdt">BTC/USDT</button>
+          <button class="symbol-tab" role="tab" data-symbol="ETHUSDT" id="tab-ethusdt">ETH/USDT</button>
+          <button class="symbol-tab" role="tab" data-symbol="BNBUSDT" id="tab-bnbusdt">BNB/USDT</button>
+          <button class="symbol-tab" role="tab" data-symbol="SOLUSDT" id="tab-solusdt">SOL/USDT</button>
+          <button class="symbol-tab custom-tab" role="tab" data-symbol="custom" id="tab-custom">Custom</button>
+        </div>
+
+        <!-- Custom Symbol Input -->
+        <div class="custom-symbol-field hidden" id="customSymbolField">
+          <label class="field-label" for="customSymbol">Custom Symbol</label>
+          <input
+            type="text"
+            id="customSymbol"
+            class="field-input"
+            placeholder="e.g. XRPUSDT"
+            autocomplete="off"
+            maxlength="20"
+          />
+        </div>
+
+        <form class="order-form" id="orderForm" novalidate>
+
+          <!-- Side Selector -->
+          <div class="field-group">
+            <label class="field-label">Order Side</label>
+            <div class="side-toggle" role="group" aria-label="Order Side">
+              <button type="button" class="side-btn buy-btn active" data-side="BUY" id="btnBuy">
+                <span class="side-icon">↑</span> BUY / Long
+              </button>
+              <button type="button" class="side-btn sell-btn" data-side="SELL" id="btnSell">
+                <span class="side-icon">↓</span> SELL / Short
+              </button>
+            </div>
+          </div>
+
+          <!-- Order Type -->
+          <div class="field-group">
+            <label class="field-label">Order Type</label>
+            <div class="type-toggle" role="group" aria-label="Order Type">
+              <button type="button" class="type-btn active" data-type="MARKET" id="btnMarket">Market</button>
+              <button type="button" class="type-btn" data-type="LIMIT" id="btnLimit">Limit</button>
+            </div>
+          </div>
+
+          <!-- Price (Limit only) -->
+          <div class="field-group" id="priceField" style="display:none;">
+            <label class="field-label" for="inputPrice">Limit Price (USDT)</label>
+            <div class="input-wrapper">
+              <input
+                type="number"
+                id="inputPrice"
+                class="field-input"
+                placeholder="0.00"
+                step="0.01"
+                min="0"
+                autocomplete="off"
+              />
+              <span class="input-suffix">USDT</span>
+            </div>
+          </div>
+
+          <!-- Quantity -->
+          <div class="field-group">
+            <label class="field-label" for="inputQuantity">Quantity (BTC)</label>
+            <div class="input-wrapper">
+              <input
+                type="number"
+                id="inputQuantity"
+                class="field-input"
+                placeholder="0.001"
+                step="0.001"
+                min="0"
+                autocomplete="off"
+                required
+              />
+              <span class="input-suffix" id="quantitySuffix">BTC</span>
+            </div>
+            <!-- Quick Quantity Buttons -->
+            <div class="quick-qty">
+              <button type="button" class="qty-btn" data-qty="0.001">0.001</button>
+              <button type="button" class="qty-btn" data-qty="0.005">0.005</button>
+              <button type="button" class="qty-btn" data-qty="0.01">0.01</button>
+              <button type="button" class="qty-btn" data-qty="0.05">0.05</button>
+            </div>
+          </div>
+
+          <!-- Validation Error Area -->
+          <div class="validation-msg hidden" id="validationMsg" role="alert"></div>
+
+          <!-- Order Summary -->
+          <div class="order-summary" id="orderSummary">
+            <div class="summary-row">
+              <span class="summary-label">Symbol</span>
+              <span class="summary-value" id="summarySymbol">BTCUSDT</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Side</span>
+              <span class="summary-value buy-color" id="summarySide">BUY</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Type</span>
+              <span class="summary-value" id="summaryType">MARKET</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Quantity</span>
+              <span class="summary-value" id="summaryQty">—</span>
+            </div>
+            <div class="summary-row" id="summaryPriceRow" style="display:none">
+              <span class="summary-label">Price</span>
+              <span class="summary-value" id="summaryPrice">—</span>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="submit-btn buy-submit" id="submitBtn">
+            <span class="btn-text" id="btnText">Place BUY Order</span>
+            <span class="btn-loader hidden" id="btnLoader"></span>
+          </button>
+
+        </form>
+      </section>
+
+      <!-- Results Panel -->
+      <section class="panel results-panel" aria-label="Order Results">
+        <div class="panel-header">
+          <h2 class="panel-title">Order History</h2>
+          <button class="clear-btn" id="clearBtn" type="button">Clear</button>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon">📋</div>
+          <p class="empty-text">Your order results will appear here after placing an order.</p>
+        </div>
+
+        <!-- Results List -->
+        <div class="results-list" id="resultsList"></div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Success Toast -->
+  <div class="toast success-toast hidden" id="successToast" role="status" aria-live="polite">
+    <span class="toast-icon">✅</span>
+    <span class="toast-msg" id="toastMsg">Order placed successfully!</span>
+  </div>
+
+  <!-- Error Toast -->
+  <div class="toast error-toast hidden" id="errorToast" role="alert" aria-live="assertive">
+    <span class="toast-icon">❌</span>
+    <span class="toast-msg" id="errorToastMsg">An error occurred.</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
