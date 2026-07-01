@@ -69,10 +69,16 @@ The bot retrieves credentials from a `.env` file located in the project root dir
    ```bash
    cp .env.example .env
    ```
-2. Open `.env` and fill in your Binance Futures Testnet API credentials:
+   example : Open `.env` and fill in your Binance Futures Testnet API credentials:
    ```env
    BINANCE_API_KEY=your_testnet_api_key_here
    BINANCE_API_SECRET=your_testnet_api_secret_here
+   BASE_URL=https://testnet.binancefuture.com
+   ```
+   2. Open `.env` and fill in your Binance Futures Testnet API credentials:
+   ```env
+   BINANCE_API_KEY=MQavemA6FfpQUAoJgwWdztVtDZupeJAG28Hatkyom056stqPSbQ81WvTLyeG8FHO
+   BINANCE_API_SECRET=kArk5iCLRWjdmT9Ftyn0kAXeI70yaHpPm6S0dxIgppmiAfX9gWaiHXM8Q0Ipr0Fq
    BASE_URL=https://testnet.binancefuture.com
    ```
 
