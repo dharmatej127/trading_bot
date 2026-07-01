@@ -1,3 +1,5 @@
+
+Deployed link :https://tradingbot-production-8e9b.up.railway.app/
 # Binance USDT-M Futures Trading Bot
 
 A production-quality Python command-line interface (CLI) application for placing Market and Limit orders on the Binance USDT-M Futures Testnet.
